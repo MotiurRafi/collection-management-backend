@@ -22,7 +22,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd .
+          cd . 
           npm install
 
   deploy-backend:
