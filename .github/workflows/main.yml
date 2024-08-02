@@ -27,7 +27,7 @@ jobs:
 
       - name: Run tests
         run: |
-          cd collection-management-backend
+          cd .
           npm test 
 
   deploy-backend:
