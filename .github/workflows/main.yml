@@ -22,8 +22,13 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd . 
+          cd .
           npm install
+
+      - name: Build backend
+        run: |
+          cd .
+          npm run build
 
   deploy-backend:
     runs-on: ubuntu-latest
@@ -38,7 +43,12 @@ jobs:
       - name: Deploy to Heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          HEROKU_APP_NAME: collection-management-backend
         run: |
-          git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+          echo "machine api.heroku.com" > ~/.netrc
+          echo "  login ${HEROKU_API_KEY}" >> ~/.netrc
+          echo "  password ${HEROKU_API_KEY}" >> ~/.netrc
+          echo "machine git.heroku.com" >> ~/.netrc
+          echo "  login ${HEROKU_API_KEY}" >> ~/.netrc
+          echo "  password ${HEROKU_API_KEY}" >> ~/.netrc
+          git remote add heroku https://git.heroku.com/collection-management-backend.git
           git push heroku main
