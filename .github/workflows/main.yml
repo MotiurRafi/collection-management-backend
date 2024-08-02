@@ -25,6 +25,11 @@ jobs:
           cd .
           npm install
 
+      - name: Run tests
+        run: |
+          cd collection-management-backend
+          npm test 
+
   deploy-backend:
     runs-on: ubuntu-latest
     needs: build-backend
