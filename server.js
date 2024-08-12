@@ -16,9 +16,10 @@ const searchRoute = require('./routes/search');
 const app = express();
 
 app.use(cors({
-  origin: 'https://collection-management-mr.vercel.app/',
+  origin: 'https://collection-management-mr.vercel.app',
   optionsSuccessStatus: 200
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
