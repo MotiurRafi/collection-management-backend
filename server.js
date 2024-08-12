@@ -17,8 +17,11 @@ const app = express();
 
 app.use(cors({
   origin: 'https://collection-management-mr.vercel.app',
-  optionsSuccessStatus: 200
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200,
+  credentials: true
 }));
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
