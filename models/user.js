@@ -23,11 +23,11 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 'active'
     }
   }, {});
-  User.associate = function(models) {
+  User.associate = function (models) {
     User.hasMany(models.Collection, { foreignKey: 'userId' });
     User.hasMany(models.Comment, { foreignKey: 'userId' });
-    User.hasMany(models.Like, { foreignKey: 'userId' });  
-    User.belongsToMany(models.Item, { through: models.Like, as: 'LikedItems', foreignKey: 'userId'});
-      };
+    User.hasMany(models.Like, { foreignKey: 'userId' });
+    User.belongsToMany(models.Item, { through: models.Like, as: 'LikedItems', foreignKey: 'userId' });
+  };
   return User;
 };
