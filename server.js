@@ -45,6 +45,8 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something broke!');
 });
 
+const port = process.env.PORT || 5000;
+
 db.sequelize.authenticate()
   .then(() => {
     console.log('Database connection has been established successfully.');
