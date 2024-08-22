@@ -11,15 +11,13 @@ const tagRoutes = require('./routes/tag');
 const commentRoutes = require('./routes/comment');
 const likeRoutes = require('./routes/like');
 const searchRoute = require('./routes/search');
-require('dotenv').config();
 
 const app = express();
 
 app.use(cors({
-  origin: 'https://collection-management-mr.vercel.app',
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  optionsSuccessStatus: 200,
-  credentials: true
+  origin: 'http://localhost:3000', 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+  credentials: true 
 }));
 
 app.use(express.json());
@@ -40,23 +38,7 @@ app.get('/', (req, res) => {
   res.send('Hello, world!');
 });
 
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
-});
-
 const port = process.env.PORT || 5000;
-
-db.sequelize.authenticate()
-  .then(() => {
-    console.log('Database connection has been established successfully.');
-    return db.sequelize.sync();
-  })
-  .then(() => {
-    app.listen(port, () => {
-      console.log(`Server is running on port ${port}`);
-    });
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
