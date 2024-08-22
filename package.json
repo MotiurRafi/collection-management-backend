@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "postinstall": "npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all"
   },
   "keywords": [],
   "author": "",
