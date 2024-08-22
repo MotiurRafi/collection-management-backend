@@ -2,6 +2,7 @@ const { Op } = require('sequelize');
 const db = require('../models');
 
 exports.createItem = async (req, res) => {
+  console.log(req.body)
   const { collectionId, name, tags, customFieldValues } = req.body;
   try {
     const collection = await db.Collection.findByPk(collectionId);
@@ -41,7 +42,9 @@ exports.createItem = async (req, res) => {
     const item = await db.Item.create(itemData);
 
     if (tags && Array.isArray(tags)) {
-      const tagNames = tags.map(tag => tag.trim());
+      const tagNames = tags
+        .filter(tag => tag !== null && tag !== undefined)
+        .map(tag => tag.trim());
       const currentTags = await item.getTags();
       if (currentTags.length >= 80) {
         console.log("tags limit reached")
@@ -66,30 +69,158 @@ exports.getItem = async (req, res) => {
   const { id } = req.params;
   try {
     const item = await db.Item.findByPk(id, {
-      include: {
-        model: db.Tag,
-        through: { attributes: [] }
-      }
+      include: [
+        {
+          model: db.Collection,
+          include: {
+            model: db.User,
+            attributes: ['username']
+          }
+        },
+        {
+          model: db.Tag,
+          through: { attributes: [] },
+        },
+        {
+          model: db.User,
+          attributes: ['id'],
+          through: {
+            model: db.Like
+          },
+          as: 'Likers'
+        },
+        {
+          model: db.Comment,
+          attributes: ['userId', 'text'],
+          include: {
+            model: db.User,
+            attributes: ['username'],
+          },
+        },
+      ],
     });
+    if (!item) {
+      return res.status(404).json({ message: "Item not found" });
+    }
     res.status(200).json(item);
   } catch (error) {
     res.status(500).json({ message: "Error fetching item", error });
+    console.log(error)
   }
 };
 
+
+
 exports.getCollectionItems = async (req, res) => {
   const { collectionId } = req.params;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 9;
+  const offset = (page - 1) * limit;
+
   try {
     const items = await db.Item.findAll({
       where: { collectionId },
+      offset: offset,
+      limit: limit,
       include: {
         model: db.Tag,
-        through: { attributes: [] }
-      }
+        through: { attributes: [] },
+      },
     });
     res.status(200).json(items);
   } catch (error) {
     res.status(500).json({ message: "Error fetching items", error });
+  }
+};
+
+exports.getTagItems = async (req, res) => {
+  const { tag } = req.params;
+  const { page, limit } = req.query;
+  const offset = (page - 1) * limit;
+
+  try {
+    const items = await db.Item.findAll({
+      include: [
+        {
+          model: db.Tag,
+          where: { name: tag },
+          attributes: [],
+          through: { attributes: [] },
+        },
+        {
+          model: db.Collection,
+          attributes: ['name', 'category'],
+          include: {
+            model: db.User,
+            attributes: ['id', 'username'],
+          },
+        },
+      ],
+      offset: parseInt(offset),
+      limit: parseInt(limit),
+    });
+
+    res.status(200).json(items);
+  } catch (error) {
+    console.error("Error fetching items by tag:", error);
+    res.status(500).json({ message: "Error fetching items", error });
+  }
+};
+
+exports.getAllItem = async (req, res) => {
+  const { page = 1, limit = 3 } = req.query;
+  const offset = (page - 1) * limit;
+
+  try {
+    const items = await db.Item.findAll({
+      order: [['updatedAt', 'DESC']],
+      include: [
+        {
+          model: db.Collection,
+          attributes: ['name', 'category'],
+          include: {
+            model: db.User,
+            attributes: ['id', 'username'],
+          },
+        },
+      ],
+      offset: parseInt(offset),
+      limit: parseInt(limit),
+    });
+
+    res.status(200).json(items);
+  } catch (error) {
+    console.error('Error fetching items:', error);
+    res.status(500).json({ message: 'Error fetching items' });
+  }
+};
+
+
+exports.getLatestItems = async (req, res) => {
+  try {
+    const latestItems = await db.Item.findAll({
+      order: [['updatedAt', 'DESC']],
+      limit: 9,
+      include: [
+        {
+          model: db.Collection,
+          attributes: ['name', 'category'],
+          include: {
+            model: db.User,
+            attributes: ['username'],
+          },
+        },
+        {
+          model: db.Tag,
+          through: { attributes: [] },
+        }
+      ],
+    });
+
+    res.status(200).json(latestItems);
+  } catch (error) {
+    console.error("Error fetching latest items:", error);
+    res.status(500).json({ message: "Error fetching latest items" });
   }
 };
 

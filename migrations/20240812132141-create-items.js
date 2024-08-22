@@ -42,15 +42,15 @@ module.exports = {
         allowNull: true
       },
       multiline_text_field1_value: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: true
       },
       multiline_text_field2_value: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: true
       },
       multiline_text_field3_value: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: true
       },
       checkbox_field1_value: {

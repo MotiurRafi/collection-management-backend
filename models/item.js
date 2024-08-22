@@ -70,10 +70,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {});
 
-  Item.associate = function(models) {
+  Item.associate = function (models) {
     Item.belongsTo(models.Collection, { foreignKey: 'collectionId' });
     Item.hasMany(models.Comment, { foreignKey: 'itemId' });
-    Item.belongsToMany(models.User, { through: 'Likes', foreignKey: 'itemId' });
+    Item.belongsToMany(models.User, { through: models.Like, as: 'Likers', foreignKey: 'itemId' });
     Item.belongsToMany(models.Tag, { through: models.ItemTag, foreignKey: 'itemId' });
   };
 

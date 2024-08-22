@@ -7,8 +7,7 @@ exports.getUser = async (req, res) => {
     try {
         const user = await db.User.findOne({
             where: { id: userId },
-            attributes: { exclude: ['password'] },
-            include: [{ model: db.Collection }]
+            attributes: { exclude: ['password'] }
         });
 
         if (!user) {
@@ -21,7 +20,6 @@ exports.getUser = async (req, res) => {
         res.status(500).json({ message: "Error getting user" });
     }
 };
-
 exports.searchUser = async (req, res) => {
     try {
         const { query } = req.query;
@@ -35,7 +33,7 @@ exports.searchUser = async (req, res) => {
             attributes: ['id', 'username', 'email', 'role', 'status']
         });
 
-        res.json({ users });
+        res.json(users);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'An error occurred while searching' });

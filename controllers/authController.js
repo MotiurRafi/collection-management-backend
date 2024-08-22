@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const db = require('../models');
 
 const createJWTToken = (user) => {
-  return jwt.sign({ id: user.id, username: user.username, role: user.role }, 'jwt_secret', { expiresIn: '4h' });
+  return jwt.sign({ id: user.id, username: user.username, email: user.email , role: user.role, status: user.status }, 'jwt_secret', { expiresIn: '4h' });
 };
 
 exports.register = async (req, res) => {
