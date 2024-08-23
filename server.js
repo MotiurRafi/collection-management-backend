@@ -1,8 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const db = require('./models');
+require('dotenv').config();
+
 const authRoutes = require('./routes/auth');
-const userAuthRoutes = require('./routes/user_auth');
 const userRoutes = require('./routes/user');
 const adminRoutes = require('./routes/admin');
 const collectionRoutes = require('./routes/collection');
@@ -11,7 +12,6 @@ const tagRoutes = require('./routes/tag');
 const commentRoutes = require('./routes/comment');
 const likeRoutes = require('./routes/like');
 const searchRoute = require('./routes/search');
-require('dotenv').config();
 
 const app = express();
 
@@ -26,7 +26,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/api/auth', authRoutes);
-app.use('/api/userAuth', userAuthRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/collection', collectionRoutes);

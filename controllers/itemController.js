@@ -91,7 +91,7 @@ exports.getItem = async (req, res) => {
         },
         {
           model: db.Comment,
-          attributes: ['userId', 'text'],
+          attributes: ['id', 'userId', 'text'],
           include: {
             model: db.User,
             attributes: ['username'],
