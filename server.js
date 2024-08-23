@@ -12,6 +12,7 @@ const tagRoutes = require('./routes/tag');
 const commentRoutes = require('./routes/comment');
 const likeRoutes = require('./routes/like');
 const searchRoute = require('./routes/search');
+const userAuthRoutes = require('./routes/user_auth');
 
 const app = express();
 
@@ -27,6 +28,8 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/userAuth', userAuthRoutes);
+app.use('/api/userAuth', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/collection', collectionRoutes);
 app.use('/api/item', itemRoutes);
