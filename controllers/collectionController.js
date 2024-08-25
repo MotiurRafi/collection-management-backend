@@ -133,6 +133,9 @@ exports.getUserCollections = async (req, res) => {
   const offset = (page - 1) * limit;
 
   try {
+    const collectionCount = await db.Collection.count({
+      where: { userId }    
+    });
     const collections = await db.Collection.findAll({
       where: { userId },
       offset: parseInt(offset),
@@ -161,8 +164,8 @@ exports.getUserCollections = async (req, res) => {
       subQuery: false
     });
 
-    res.status(200).json(collections);
-  } catch (error) {
+    res.status(200).json({ collectionCount, collections });
+    } catch (error) {
     console.error('Error fetching collections:', error);
     res.status(500).json({ message: 'Error fetching collections', error });
   }
