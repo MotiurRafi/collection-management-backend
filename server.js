@@ -16,7 +16,6 @@ const commentRoutes = require('./routes/comment');
 const likeRoutes = require('./routes/like');
 const searchRoute = require('./routes/search');
 const userAuthRoutes = require('./routes/user_auth');
-const commentController = require('./controllers/commentController')
 
 const app = express();
 const server = http.createServer(app);
@@ -108,6 +107,6 @@ const socketPort = process.env.SOCKETPORT || 8080;
 app.listen(port, () => {
   console.log("backend running on port : ", port)
 })
-server.listen(port, () => {
-  console.log("socket running on port:", port);
+server.listen(socketPort, () => {
+  console.log("socket running on port:", socketPort);
 });
