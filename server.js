@@ -102,11 +102,7 @@ app.use((err, req, res, next) => {
 });
 
 const port = process.env.PORT || 5000;
-const socketPort = process.env.SOCKETPORT || 8080;
 
 app.listen(port, () => {
   console.log("backend running on port : ", port)
 })
-server.listen(socketPort, () => {
-  console.log("socket running on port:", socketPort);
-});
