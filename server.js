@@ -5,7 +5,6 @@ require('dotenv').config();
 const http = require('http');
 const { Server } = require('socket.io');
 
-
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const adminRoutes = require('./routes/admin');
@@ -41,7 +40,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/userAuth', userAuthRoutes);
-app.use('/api/userAuth', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/collection', collectionRoutes);
 app.use('/api/item', itemRoutes);
@@ -53,7 +51,6 @@ app.use('/api/search', searchRoute);
 app.get('/', (req, res) => {
   res.send('Hello, world!');
 });
-
 
 io.on('connection', (socket) => {
   console.log("A user connected");
@@ -92,10 +89,6 @@ io.on('connection', (socket) => {
   });
 });
 
-
-
-
-
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
@@ -103,6 +96,6 @@ app.use((err, req, res, next) => {
 
 const port = process.env.PORT || 5000;
 
-app.listen(port, () => {
-  console.log("backend running on port : ", port)
-})
+server.listen(port, () => {
+  console.log("Backend running on port:", port);
+});
