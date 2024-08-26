@@ -88,15 +88,7 @@ exports.getItem = async (req, res) => {
             model: db.Like
           },
           as: 'Likers'
-        },
-        {
-          model: db.Comment,
-          attributes: ['id', 'userId', 'text'],
-          include: {
-            model: db.User,
-            attributes: ['username'],
-          },
-        },
+        }
       ],
     });
     if (!item) {

@@ -18,12 +18,21 @@ exports.createComment = async (req, res) => {
 exports.getItemComments = async (req, res) => {
     const { itemId } = req.params;
     try {
-        const comments = await db.Comment.findAll({ where: { itemId } });
+        const comments = await db.Comment.findAll({
+            where: { itemId },
+            include: [
+                {
+                    model: db.User,
+                    attributes: ['id', 'username']
+                },
+            ],
+        });
         res.status(200).json(comments);
     } catch (error) {
         res.status(500).json({ message: "Error fetching comments", error });
     }
 };
+
 
 exports.updateComment = async (req, res) => {
     const { id } = req.params;

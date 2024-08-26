@@ -2,6 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./models');
 require('dotenv').config();
+const http = require('http');
+const { Server } = require('socket.io');
+
 
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
@@ -13,8 +16,19 @@ const commentRoutes = require('./routes/comment');
 const likeRoutes = require('./routes/like');
 const searchRoute = require('./routes/search');
 const userAuthRoutes = require('./routes/user_auth');
+const commentController = require('./controllers/commentController')
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  path: "/socket.io",
+  cors: {
+    origin: "https://collection-management-mr.vercel.app"
+  }
+});
+
+
+
 
 app.use(cors({
   origin: 'https://collection-management-mr.vercel.app',
@@ -42,23 +56,59 @@ app.get('/', (req, res) => {
   res.send('Hello, world!');
 });
 
+
+io.on('connection', (socket) => {
+  console.log("A user connected");
+
+  socket.on('join-room', (itemId) => {
+    socket.join(itemId);
+    console.log(`User joined room for item ${itemId}`);
+  });
+
+  socket.on('action', async (itemId) => {
+    try {
+      const itemComments = await db.Comment.findAll({
+        where: { itemId },
+        include: [
+          {
+            model: db.User,
+            attributes: ['id', 'username']
+          },
+        ]
+      });
+      console.log("Fetched comments:", itemComments);
+
+      if (itemComments.length > 0) {
+        io.to(itemId).emit('comments-updated', itemComments);
+        console.log("Broadcasting comments to room:", itemId);
+      } else {
+        console.warn("No comments to broadcast for itemId:", itemId);
+      }
+    } catch (error) {
+      console.error('Error fetching or broadcasting comments:', error);
+    }
+  });
+
+  socket.on('disconnect', () => {
+    console.log('A user disconnected');
+  });
+});
+
+
+
+
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
 
 const port = process.env.PORT || 5000;
+const socketPort = process.env.SOCKETPORT || 8080;
 
-db.sequelize.authenticate()
-  .then(() => {
-    console.log('Database connection has been established successfully.');
-    return db.sequelize.sync();
-  })
-  .then(() => {
-    app.listen(port, () => {
-      console.log(`Server is running on port ${port}`);
-    });
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
+app.listen(port, () => {
+  console.log("backend running on port : ", port)
+})
+server.listen(socketPort, () => {
+  console.log("socket running on port:", socketPort);
+});
