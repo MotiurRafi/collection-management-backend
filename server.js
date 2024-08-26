@@ -21,12 +21,14 @@ const commentController = require('./controllers/commentController')
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
+  path: "/socket.io",
   cors: {
-    origin: ["https://collection-management-mr.vercel.app"],
-    methods: ["GET", "POST"],
-    credentials: true
+    origin: "https://collection-management-mr.vercel.app"
   }
 });
+
+
+
 
 app.use(cors({
   origin: 'https://collection-management-mr.vercel.app',
