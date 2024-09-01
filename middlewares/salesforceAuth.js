@@ -4,9 +4,8 @@ require('dotenv').config();
 
 exports.getSalesforceToken = async (req, res) => {
   const { codeVerifier, code: authCode } = req.body;
-  console.log('Received codeVerifier:', codeVerifier);
-  console.log('Received authCode:', authCode);
-  
+  console.log(codeVerifier, authCode);
+
   try {
     const data = qs.stringify({
       grant_type: 'authorization_code',
