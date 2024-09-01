@@ -15,7 +15,7 @@ const commentRoutes = require('./routes/comment');
 const likeRoutes = require('./routes/like');
 const searchRoute = require('./routes/search');
 const userAuthRoutes = require('./routes/user_auth');
-
+const salesforceRoutes = require('./routes/salesforce')
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -47,6 +47,7 @@ app.use('/api/tag', tagRoutes);
 app.use('/api/comment', commentRoutes);
 app.use('/api/like', likeRoutes);
 app.use('/api/search', searchRoute);
+app.use('/api/salesforce', salesforceRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hello, world!');

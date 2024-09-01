@@ -3,11 +3,11 @@ const jwt = require('jsonwebtoken');
 const db = require('../models');
 
 const createJWTToken = (user) => {
-  return jwt.sign({ id: user.id, username: user.username, email: user.email , role: user.role, status: user.status }, 'jwt_secret', { expiresIn: '4h' });
+  return jwt.sign({ id: user.id, username: user.username, email: user.email, role: user.role, status: user.status }, 'jwt_secret', { expiresIn: '4h' });
 };
 
 exports.register = async (req, res) => {
-  
+
   const { username, email, password } = req.body;
   try {
     const existingUserByUsername = await db.User.findOne({ where: { username } });
@@ -26,8 +26,8 @@ exports.register = async (req, res) => {
     });
     const createdUser = await db.User.findOne({
       where: { email },
-      attributes: { exclude: ['password','role','status'] }
-  });    res.status(200).json(createdUser);
+      attributes: { exclude: ['password', 'role', 'status'] }
+    }); res.status(200).json(createdUser);
   } catch (error) {
     res.status(500).json({ message: "Error registering user" });
   }
@@ -46,7 +46,7 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: 'Password incorrect' });
     }
 
-    const token = createJWTToken(user);
+    const token = jwt.sign({ id: user.id }, 'jwt_secret', { expiresIn: '4h' });
     res.json({ token });
   } catch (error) {
     res.status(500).json({ message: "Error logging in user" });
