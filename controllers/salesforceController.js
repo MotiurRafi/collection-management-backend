@@ -1,5 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
+const db = require('../models');
 
 const SALESFORCE_API_VERSION = process.env.SALESFORCE_API_VERSION || 'v61.0';
 
@@ -36,6 +37,12 @@ exports.createAccountAndContact = async (req, res) => {
                 }
             }
         );
+
+        await db.User.update(
+            { salesforcestatus: true },
+            { where: { email: email } }
+        );
+        
         res.status(200).send('Account and Contact created in Salesforce');
     } catch (error) {
         console.error('Salesforce error:', error);
