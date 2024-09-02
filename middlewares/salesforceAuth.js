@@ -1,3 +1,5 @@
+const qs = require('qs');
+
 exports.getSalesforceToken = async (req, res) => {
   const { code: authCode } = req.body;
   console.log('Received Auth Code:', authCode);
