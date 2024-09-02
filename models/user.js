@@ -21,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
     status: {
       type: DataTypes.ENUM('active', 'blocked'),
       defaultValue: 'active'
+    },
+    salesforceStatus: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {});
   User.associate = function (models) {

@@ -32,23 +32,3 @@ exports.getAuthorizationUrl = (req, res) => {
   const authorizationUrl = `${process.env.SALESFORCE_LOGIN_URL}/services/oauth2/authorize?response_type=code&client_id=${process.env.SALESFORCE_CONSUMER_KEY}&redirect_uri=${encodeURIComponent(process.env.SALESFORCE_REDIRECT_URI)}`;
   res.json({ url: authorizationUrl });
 };
-
-exports.getSalesforceAuthorToken = async (req, res, next) => {
-  const url = 'https://login.salesforce.com/services/oauth2/token';
-  const payload = {
-    grant_type: 'password',
-    client_id: process.env.SALESFORCE_CONSUMER_KEY,
-    client_secret: process.env.SALESFORCE_CONSUMER_SECRET,
-    username: process.env.SALESFORCE_USERNAME,
-    password: `${process.env.SALESFORCE_PASSWORD}${process.env.SALESFORCE_SECURITY_TOKEN}`
-  };
-
-  try {
-    const response = await axios.post(url, payload);
-    req.access_token = response.data.access_token;
-    next();
-  } catch (error) {
-    console.error("Error obtaining Salesforce access token:", error);
-    res.status(500).json({ error: 'Failed to obtain Salesforce access token' });
-  }
-};

@@ -6,6 +6,5 @@ const salesforceAuth = require('../middlewares/salesforceAuth');
 router.get('/auth-url', salesforceAuth.getAuthorizationUrl);
 router.post('/token', salesforceAuth.getSalesforceToken);
 router.post('/register', salesforceController.createAccountAndContact);
-router.post('/user-check', salesforceAuth.getSalesforceAuthorToken, salesforceController.checkSalesforceUser);
 
 module.exports = router;

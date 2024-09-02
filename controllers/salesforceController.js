@@ -1,5 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
+const db = require('../models');
 
 const SALESFORCE_API_VERSION = process.env.SALESFORCE_API_VERSION || 'v61.0';
 
@@ -37,29 +38,14 @@ exports.createAccountAndContact = async (req, res) => {
             }
         );
 
-        res.status(200).send('Account and Contact created in Salesforce');
+        const salesforceStatus =  await db.User.update(
+            { salesforceStatus: true },
+            { where: { email: email } }
+        );
+
+        res.status(200).json({message: 'Account and Contact created in Salesforce', salesforceStatus: salesforceStatus});
     } catch (error) {
         console.error('Salesforce error:', error);
-        res.status(500).send('Failed to create Salesforce account');
+        res.status(500).json('Failed to create Salesforce account');
     }
 };
-
-exports.checkSalesforceUser = async (req, res) => {
-    const { email } = req.body;
-    console.log("email : ", email)
-    const query = `SELECT Id FROM Contact WHERE Email = '${email}'`;
-    const url = `${process.env.SALESFORCE_INSTANCE_URL}/services/data/${process.env.API_VERSION}/query?q=${encodeURIComponent(query)}`;
-  
-    try {
-      const response = await axios.get(url, {
-        headers: { Authorization: `Bearer ${req.access_token}` }
-      });
-  
-      const contactExists = response.data.records && response.data.records.length > 0;
-      res.json({ exists: contactExists });
-    } catch (error) {
-      console.error("Error checking Salesforce user:", error);
-      res.status(500).json({ error: 'An error occurred while checking Salesforce user' });
-    }
-  };
-  
