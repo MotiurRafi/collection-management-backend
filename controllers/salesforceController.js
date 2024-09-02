@@ -43,3 +43,22 @@ exports.createAccountAndContact = async (req, res) => {
         res.status(500).send('Failed to create Salesforce account');
     }
 };
+
+exports.checkSalesforceUser = async (req, res) => {
+    const { email } = req.body;
+    const query = `SELECT Id FROM Contact WHERE Email = '${email}'`;
+    const url = `${process.env.SALESFORCE_INSTANCE_URL}/services/data/${process.env.API_VERSION}/query?q=${encodeURIComponent(query)}`;
+  
+    try {
+      const response = await axios.get(url, {
+        headers: { Authorization: `Bearer ${req.access_token}` }
+      });
+  
+      const contactExists = response.data.records && response.data.records.length > 0;
+      res.json({ exists: contactExists });
+    } catch (error) {
+      console.error("Error checking Salesforce user:", error);
+      res.status(500).json({ error: 'An error occurred while checking Salesforce user' });
+    }
+  };
+  
