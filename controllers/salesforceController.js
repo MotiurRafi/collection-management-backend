@@ -39,10 +39,10 @@ exports.createAccountAndContact = async (req, res) => {
         );
 
         await db.User.update(
-            { salesforcestatus: true },
+            { salesforceStatus: true },
             { where: { email: email } }
         );
-        
+
         res.status(200).send('Account and Contact created in Salesforce');
     } catch (error) {
         console.error('Salesforce error:', error);
