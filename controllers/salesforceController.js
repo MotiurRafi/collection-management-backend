@@ -46,6 +46,7 @@ exports.createAccountAndContact = async (req, res) => {
 
 exports.checkSalesforceUser = async (req, res) => {
     const { email } = req.body;
+    console.log("email : ", email)
     const query = `SELECT Id FROM Contact WHERE Email = '${email}'`;
     const url = `${process.env.SALESFORCE_INSTANCE_URL}/services/data/${process.env.API_VERSION}/query?q=${encodeURIComponent(query)}`;
   
