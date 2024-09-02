@@ -1,13 +1,13 @@
 const axios = require('axios');
 require('dotenv').config();
 
-const SALESFORCE_API_VERSION = process.env.SALESFORCE_API_VERSION;
+const SALESFORCE_API_VERSION = process.env.SALESFORCE_API_VERSION || 'v61.0';
 
 exports.createAccountAndContact = async (req, res) => {
     const { name, email, phone, accessToken, instanceUrl } = req.body
     try {
         const accountResponse = await axios.post(
-            `${instanceUrl}/services/data/${SALESFORCE_API_VERSION}/sobjects/Account`,
+            `${instanceUrl}/services/data/v${SALESFORCE_API_VERSION}/sobjects/Account`,
             {
                 Name: name,
                 Phone: phone
@@ -23,7 +23,7 @@ exports.createAccountAndContact = async (req, res) => {
         const accountId = accountResponse.data.id;
 
         await axios.post(
-            `${instanceUrl}/services/data/${SALESFORCE_API_VERSION}/sobjects/Contact`,
+            `${instanceUrl}/services/data/v${SALESFORCE_API_VERSION}/sobjects/Contact`,
             {
                 LastName: name,
                 Email: email,
