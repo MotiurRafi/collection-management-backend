@@ -21,7 +21,7 @@ const userAuth = async (req, res, next) => {
     try {
       const userData = await db.User.findOne({
         where: { id: decoded.id },
-        attributes: { exclude: ['password'] }
+        attributes: { exclude: ['password'], include: ['salesforcestatus']  }
       });
       if (!userData) {
         return res.status(404).json({ message: 'User not found' });
@@ -49,7 +49,7 @@ const adminAuth = async (req, res, next) => {
     try {
       const userData = await db.User.findOne({
         where: { id: decoded.id },
-        attributes: { exclude: ['password'] }
+        attributes: { exclude: ['password'], include: ['salesforcestatus']  }
       });
       if (!userData) {
         return res.status(404).json({ message: 'User not found' });
