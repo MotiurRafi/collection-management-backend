@@ -9,6 +9,7 @@ router.get('/', userAuth, (req, res) => {
         email: req.user.email,
         role: req.user.role,
         status: req.user.status,
+        salesforceStatus: req.user.salesforceStatus,
     });
 })
 module.exports = router;
