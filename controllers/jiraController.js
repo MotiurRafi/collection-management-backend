@@ -11,8 +11,8 @@ const createJiraUser = async (email, name) => {
             {
                 emailAddress: email,
                 displayName: name,
-                key: email.split('@')[0], // Use the first part of the email as the key, adjust if necessary
-                products: [] // Provide appropriate products, change if needed
+                key: email.split('@')[0],
+                products: []
             },
             {
                 headers: {
@@ -78,18 +78,46 @@ exports.createJiraTicket = async (req, res) => {
 
         console.log('Creating ticket with accountId:', accountId);
 
-        const ticketResponse = await axios.post(
+        const projectKey = "SUP";
+        const issueTypeId = "10008";
+
+        const customField1Id = "customfield_10001";
+        const customField2Id = "customfield_10002";
+
+        const response = await axios.post(
             `${JIRA_INSTANCE}/rest/api/3/issue`,
             {
                 fields: {
-                    project: { key: "SUP" },
+                    project: {
+                        key: projectKey
+                    },
                     summary: summary,
-                    description: `Collection: ${collection}\nLink: ${link}`,
-                    issuetype: { name: "Task" },
-                    priority: { name: priority },
-                    reporter: { id: accountId },
-                    customfield_10053: link,
-                    customfield_10047: collection
+                    description: {
+                        type: "doc",
+                        version: 1,
+                        content: [
+                            {
+                                type: "paragraph",
+                                content: [
+                                    {
+                                        type: "text",
+                                        text: `Collection: ${collection}\nLink: ${link}`
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    issuetype: {
+                        id: issueTypeId
+                    },
+                    priority: {
+                        name: priority
+                    },
+                    assignee: {
+                        id: accountId 
+                    },
+                    [customField1Id]: "Custom value 1",
+                    [customField2Id]: "Custom value 2" 
                 }
             },
             {
@@ -100,8 +128,8 @@ exports.createJiraTicket = async (req, res) => {
             }
         );
 
-        console.log('Ticket created successfully:', ticketResponse.data);
-        res.json({ key: ticketResponse.data.key, success: true });
+        console.log('Ticket created successfully:', response.data);
+        res.json({ key: response.data.key, success: true });
     } catch (error) {
         console.error('Error creating Jira ticket:', error.message);
         res.status(500).json({ success: false, message: 'Failed to create Jira ticket or user', error: error.message });
