@@ -11,7 +11,8 @@ const createJiraUser = async (email, name) => {
             {
                 emailAddress: email,
                 displayName: name,
-                notification: false
+                key: email.split('@')[0], // Use the first part of the email as the key, adjust if necessary
+                products: ["jira-software"] // Provide appropriate products, change if needed
             },
             {
                 headers: {
@@ -23,10 +24,11 @@ const createJiraUser = async (email, name) => {
 
         return response.data.accountId;
     } catch (error) {
-        console.error('Error creating user in Jira:', error.message);
+        console.error('Error creating user in Jira:', error.response?.data || error.message);
         return null;
     }
 };
+
 
 const checkUserExistsInJira = async (email) => {
     try {
