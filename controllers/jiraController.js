@@ -91,29 +91,11 @@ exports.createJiraTicket = async (req, res) => {
                         key: projectKey
                     },
                     summary: summary,
-                    description: {
-                        type: "doc",
-                        version: 1,
-                        content: [
-                            {
-                                type: "paragraph",
-                                content: [
-                                    {
-                                        type: "text",
-                                        text: `Collection: ${collection}\nLink: ${link}`
-                                    }
-                                ]
-                            }
-                        ]
-                    },
                     issuetype: {
                         id: issueTypeId
                     },
                     priority: {
                         name: priority
-                    },
-                    assignee: {
-                        accountId: accountId 
                     },
                     [customField1Id]: collection,
                     [customField2Id]: link    
