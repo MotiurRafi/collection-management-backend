@@ -80,6 +80,8 @@ exports.createJiraTicket = async (req, res) => {
 
         const projectKey = "SUP";
         const issueTypeId = "10008";
+        const customField1Id = "customfield_10047";
+        const customField2Id = "customfield_10053";
 
         const response = await axios.post(
             `${JIRA_INSTANCE}/rest/api/3/issue`,
@@ -111,8 +113,10 @@ exports.createJiraTicket = async (req, res) => {
                         name: priority
                     },
                     assignee: {
-                        id: accountId 
+                        accountId: accountId 
                     },
+                    [customField1Id]: collection,
+                    [customField2Id]: link    
                 }
             },
             {
@@ -126,7 +130,7 @@ exports.createJiraTicket = async (req, res) => {
         console.log('Ticket created successfully:', response.data);
         res.json({ key: response.data.key, success: true });
     } catch (error) {
-        console.error('Error creating Jira ticket:', error.message);
+        console.error('Error creating Jira ticket:', error.response?.data || error.message);
         res.status(500).json({ success: false, message: 'Failed to create Jira ticket or user', error: error.message });
     }
 };
