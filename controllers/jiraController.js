@@ -49,6 +49,29 @@ const checkUserExistsInJira = async (email) => {
     }
 };
 
+const addUserToGroup = async (accountId, groupName) => {
+    try {
+        const response = await axios.post(
+            `${JIRA_INSTANCE}/rest/api/3/group/user?groupname=${encodeURIComponent(groupName)}`,
+            {
+                accountId: accountId
+            },
+            {
+                headers: {
+                    Authorization: `Basic ${Buffer.from(`${JIRA_EMAIL}:${JIRA_API_TOKEN}`).toString('base64')}`,
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+
+        console.log(`User added to group ${groupName} successfully.`);
+        return true;
+    } catch (error) {
+        console.error('Error adding user to group:', error.response?.data || error.message);
+        return false;
+    }
+};
+
 exports.createJiraTicket = async (req, res) => {
     const { email, name, summary, priority, collection, link } = req.body;
 
@@ -62,6 +85,9 @@ exports.createJiraTicket = async (req, res) => {
             console.log('Creating new user in Jira');
             accountId = await createJiraUser(email, name);
             if (!accountId) throw new Error('Failed to create user in Jira');
+
+            const addedToGroup = await addUserToGroup(accountId, 'Support Team');
+            if (!addedToGroup) throw new Error('Failed to add user to the Support Team group');
         } else {
             console.log('User already exists in Jira');
             const userResponse = await axios.get(
