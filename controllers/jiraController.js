@@ -51,13 +51,17 @@ exports.createJiraTicket = async (req, res) => {
     const { email, name, summary, priority, collection, link } = req.body;
 
     try {
+        console.log('Request Data:', req.body);
+
         let userExists = await checkUserExistsInJira(email);
         let accountId;
 
         if (!userExists) {
+            console.log('Creating new user in Jira');
             accountId = await createJiraUser(email, name);
             if (!accountId) throw new Error('Failed to create user in Jira');
         } else {
+            console.log('User already exists in Jira');
             const userResponse = await axios.get(
                 `${JIRA_INSTANCE}/rest/api/3/user/search?query=${email}`,
                 {
@@ -69,6 +73,8 @@ exports.createJiraTicket = async (req, res) => {
             );
             accountId = userResponse.data[0].accountId;
         }
+
+        console.log('Creating ticket with accountId:', accountId);
 
         const ticketResponse = await axios.post(
             `${JIRA_INSTANCE}/rest/api/3/issue`,
@@ -92,8 +98,10 @@ exports.createJiraTicket = async (req, res) => {
             }
         );
 
+        console.log('Ticket created successfully:', ticketResponse.data);
         res.json({ key: ticketResponse.data.key, success: true });
     } catch (error) {
+        console.error('Error creating Jira ticket:', error.message);
         res.status(500).json({ success: false, message: 'Failed to create Jira ticket or user', error: error.message });
     }
 };
