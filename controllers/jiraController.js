@@ -12,7 +12,7 @@ const createJiraUser = async (email, name) => {
                 emailAddress: email,
                 displayName: name,
                 key: email.split('@')[0], // Use the first part of the email as the key, adjust if necessary
-                products: ["jira-software"] // Provide appropriate products, change if needed
+                products: [] // Provide appropriate products, change if needed
             },
             {
                 headers: {
