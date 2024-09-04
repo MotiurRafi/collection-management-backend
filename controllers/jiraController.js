@@ -140,8 +140,14 @@ exports.getUserTickets = async (req, res) => {
 
         const tickets = response.data.issues;
 
-        console.log('Tickets fetched successfully:', tickets.length);
-        res.json({ success: true, tickets });
+        const ticketDetails = tickets.map(ticket => ({
+            link: `${JIRA_INSTANCE}/browse/${ticket.key}`,
+            summary: ticket.fields.summary,
+            customFieldValue: ticket.fields.customfield_10049
+        }));
+
+        console.log('Tickets fetched successfully:', ticketDetails.length);
+        res.json({ success: true, tickets: ticketDetails });
 
     } catch (error) {
         console.error('Error fetching Jira tickets:', error.response?.data || error.message);
