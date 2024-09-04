@@ -16,7 +16,7 @@ const likeRoutes = require('./routes/like');
 const searchRoute = require('./routes/search');
 const userAuthRoutes = require('./routes/user_auth');
 const salesforceRoutes = require('./routes/salesforce')
-const jiraRoutes = require('./controllers/jiraController')
+const jiraRoutes = require('./routes/jira')
 
 const app = express();
 const server = http.createServer(app);
