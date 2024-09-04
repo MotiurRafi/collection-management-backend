@@ -91,7 +91,9 @@ exports.createJiraTicket = async (req, res) => {
                         key: projectKey
                     },
                     summary: summary,
-                    reporter: accountId,
+                    reporter: {
+                        id: accountId 
+                    },
                     issuetype: {
                         id: issueTypeId
                     },
@@ -99,7 +101,7 @@ exports.createJiraTicket = async (req, res) => {
                         name: priority
                     },
                     [customField1Id]: collection,
-                    [customField2Id]: link    
+                    [customField2Id]: link
                 }
             },
             {
