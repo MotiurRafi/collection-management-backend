@@ -91,6 +91,7 @@ exports.createJiraTicket = async (req, res) => {
                         key: projectKey
                     },
                     summary: summary,
+                    reporter: accountId,
                     issuetype: {
                         id: issueTypeId
                     },
