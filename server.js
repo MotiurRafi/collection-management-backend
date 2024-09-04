@@ -34,7 +34,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   optionsSuccessStatus: 200,
   credentials: true
-}));
+})); 
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
