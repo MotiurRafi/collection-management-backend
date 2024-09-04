@@ -81,8 +81,8 @@ exports.createJiraTicket = async (req, res) => {
         const projectKey = "SUP";
         const issueTypeId = "10008";
 
-        const customField1Id = "customfield_10001";
-        const customField2Id = "customfield_10002";
+        const customField1Id = "customfield_10047";
+        const customField2Id = "customfield_10053";
 
         const response = await axios.post(
             `${JIRA_INSTANCE}/rest/api/3/issue`,
@@ -116,8 +116,8 @@ exports.createJiraTicket = async (req, res) => {
                     assignee: {
                         id: accountId 
                     },
-                    [customField1Id]: "Custom value 1",
-                    [customField2Id]: "Custom value 2" 
+                    [customField1Id]: collection,
+                    [customField2Id]: link 
                 }
             },
             {
