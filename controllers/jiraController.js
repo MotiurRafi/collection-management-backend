@@ -108,11 +108,43 @@ exports.createJiraTicket = async (req, res) => {
                 }
             }
         );
-
+        const ticketKey = response.data.key;
+        const ticketUrl = `${JIRA_INSTANCE}/browse/${ticketKey}`;
         console.log('Ticket created successfully:', response.data);
-        res.json({ key: response.data.key, success: true });
+
+        res.json({ key: ticketKey, link: ticketUrl, success: true });
     } catch (error) {
         console.error('Error creating Jira ticket:', error.response?.data || error.message);
         res.status(500).json({ success: false, message: 'Failed to create Jira ticket or user', error: error.message });
+    }
+};
+
+
+exports.getUserTickets = async (req, res) => {
+    const { email } = req.query;
+
+    try {
+        console.log('Fetching tickets for email:', email);
+
+        const jql = `reporter = "${email}" OR assignee = "${email}"`;
+
+        const response = await axios.get(
+            `${JIRA_INSTANCE}/rest/api/3/search?jql=${encodeURIComponent(jql)}`,
+            {
+                headers: {
+                    Authorization: `Basic ${Buffer.from(`${JIRA_EMAIL}:${JIRA_API_TOKEN}`).toString('base64')}`,
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+
+        const tickets = response.data.issues;
+
+        console.log('Tickets fetched successfully:', tickets.length);
+        res.json({ success: true, tickets });
+
+    } catch (error) {
+        console.error('Error fetching Jira tickets:', error.response?.data || error.message);
+        res.status(500).json({ success: false, message: 'Failed to fetch Jira tickets', error: error.message });
     }
 };
