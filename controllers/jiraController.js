@@ -176,7 +176,7 @@ exports.getUserTickets = async (req, res) => {
         }));
 
         console.log('Tickets fetched successfully:', ticketDetails.length);
-        res.json({ success: true, tickets: ticketDetails });
+        res.json({tickets: ticketDetails });
 
     } catch (error) {
         console.error('Error fetching Jira tickets:', error.response?.data || error.message);
