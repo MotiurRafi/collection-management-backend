@@ -172,7 +172,7 @@ exports.getUserTickets = async (req, res) => {
         const ticketDetails = tickets.map(ticket => ({
             link: `${JIRA_INSTANCE}/browse/${ticket.key}`,
             summary: ticket.fields.summary,
-            customFieldValue: ticket.fields.customfield_10049
+            status: ticket.fields.customfield_10049
         }));
 
         console.log('Tickets fetched successfully:', ticketDetails.length);
