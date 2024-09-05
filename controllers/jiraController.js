@@ -86,7 +86,7 @@ exports.createJiraTicket = async (req, res) => {
             accountId = await createJiraUser(email, name);
             if (!accountId) throw new Error('Failed to create user in Jira');
 
-            const addedToGroup = await addUserToGroup(accountId, 'Support Team');
+            const addedToGroup = await addUserToGroup(accountId, 'jira-users-motiurrafi601');
             if (!addedToGroup) throw new Error('Failed to add user to the Support Team group');
         } else {
             console.log('User already exists in Jira');
